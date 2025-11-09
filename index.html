@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  color: white;
+}
+
+/* --- FOND AVEC ÉTOILES FILANTES --- */
+#stars, #shooting-stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 50%, #000010, #000);
+  overflow: hidden;
+}
+
+/* Petites étoiles scintillantes */
+.star {
+  position: absolute;
+  background: white;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* Étoiles filantes */
+.shooting-star {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, white, transparent);
+  opacity: 0.7;
+  transform: rotate(45deg);
+  animation: shoot 2s linear forwards;
+}
+
+@keyframes shoot {
+  0% {
+    transform: translate(0, 0) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100vw, 100vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* --- PAGES --- */
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.page.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* --- PAGE 1 (cœur) --- */
+#page1 h1 {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 20px #ff77ff;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.main-heart {
+  font-size: 5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 20px #ff99cc);
+  user-select: none;
+}
+.main-heart:hover { transform: scale(1.2); }
+
+.instruction {
+  position: absolute;
+  bottom: 30px;
+  color: rgba(255,255,255,0.9);
+  font-size: 1.2rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* --- PAGE 2 (enveloppe réaliste + feu) --- */
+.envelope-container {
+  position: relative;
+  width: 320px;
+  height: 220px;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.envelope {
+  width: 100%;
+  height: 100%;
+  background: #d2b48c;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.envelope::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  opacity: 0.3;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(to bottom, #c49b6c, #a0784f);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top center;
+  transition: transform 1s ease;
+}
+
+/* Feu réaliste */
+.fire {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 60px;
+  pointer-events: none;
+  display: none;
+}
+
+.flame {
+  position: absolute;
+  bottom: 0;
+  width: 20px;
+  height: 60px;
+  background: radial-gradient(circle at 50% 80%, #ff0, #f00 70%);
+  border-radius: 50%;
+  animation: flameMove 0.4s infinite alternate;
+  opacity: 0.8;
+}
+
+.flame:nth-child(1) { left: 30px; animation-delay: 0s; }
+.flame:nth-child(2) { left: 80px; animation-delay: 0.1s; }
+.flame:nth-child(3) { left: 130px; animation-delay: 0.2s; }
+.flame:nth-child(4) { left: 180px; animation-delay: 0.3s; }
+
+@keyframes flameMove {
+  from { transform: scaleY(1) translateY(0); opacity: 0.9; }
+  to { transform: scaleY(1.4) translateY(-20px); opacity: 0.5; }
+}
+
+.burn-effect {
+  animation: burnOut 3s ease forwards;
+}
+
+@keyframes burnOut {
+  0% { filter: brightness(1) contrast(1); opacity: 1; }
+  80% { filter: brightness(1.5) sepia(1); opacity: 0.8; }
+  100% { opacity: 0; transform: scale(0.95); }
+}
+
+/* --- PAGE 3 (lettre) --- */
+#page3 {
+  background: transparent;
+}
+
+.letter {
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  max-width: 600px;
+  width: 90%;
+  animation: unfold 1s ease-out;
+  color: #333;
+}
+
+@keyframes unfold {
+  0% { transform: scale(0.5) rotateX(-90deg); opacity: 0; }
+  100% { transform: scale(1) rotateX(0); opacity: 1; }
+}
+
+.letter h2 {
+  color: #e74c3c;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.letter p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.signature {
+  text-align: right;
+  font-style: italic;
+  color: #e74c3c;
+  margin-top: 30px;
+  font-size: 1.3rem;
+}
+</style>
+</head>
+<body>
+
+<!-- FOND D'ÉTOILES -->
+<div id="stars"></div>
+<div id="shooting-stars"></div>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <h1>HAPPY BIRTHDAY TO YOU</h1>
+  <div class="main-heart" id="mainHeart">❤️</div>
+  <div class="instruction">Cliquez sur le cœur ! 💝</div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+  <h1>Vous avez un message...</h1>
+  <div class="envelope-container" id="envelopeContainer">
+    <div class="envelope" id="envelope">
+      <div class="envelope-flap"></div>
+      <div class="fire" id="fire">
+        <div class="flame"></div>
+        <div class="flame"></div>
+        <div class="flame"></div>
+        <div class="flame"></div>
+      </div>
+    </div>
+  </div>
+  <div class="instruction">Cliquez sur l'enveloppe ! 💌</div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+  <div class="letter">
+    <h2>Joyeux Anniversaire ! 🎉</h2>
+    <p>En ce jour spécial, je te souhaite un merveilleux anniversaire rempli de joie et de bonheur.</p>
+    <p>Tu es une personne unique, lumineuse et inspirante. Que cette année t’apporte tout ce que ton cœur désire !</p>
+    <p>Profite pleinement de cette journée, elle t’appartient ! 🎂🎈</p>
+    <div class="signature">Avec toute mon affection ❤️</div>
+  </div>
+</div>
+
+<script>
+// --- Animation étoiles fixes ---
+const starsContainer = document.getElementById('stars');
+for (let i = 0; i < 150; i++) {
+  const star = document.createElement('div');
+  star.classList.add('star');
+  star.style.top = Math.random() * 100 + '%';
+  star.style.left = Math.random() * 100 + '%';
+  star.style.animationDelay = Math.random() * 3 + 's';
+  starsContainer.appendChild(star);
+}
+
+// --- Étoiles filantes aléatoires ---
+const shootingContainer = document.getElementById('shooting-stars');
+function createShootingStar() {
+  const star = document.createElement('div');
+  star.classList.add('shooting-star');
+  star.style.top = Math.random() * window.innerHeight / 2 + 'px';
+  star.style.left = Math.random() * window.innerWidth / 2 + 'px';
+  shootingContainer.appendChild(star);
+  setTimeout(() => star.remove(), 2000);
+}
+setInterval(createShootingStar, 1500);
+
+// --- Navigation entre pages ---
+let clickCount = 0;
+const mainHeart = document.getElementById('mainHeart');
+const envelopeContainer = document.getElementById('envelopeContainer');
+const envelope = document.getElementById('envelope');
+const fire = document.getElementById('fire');
+
+mainHeart.addEventListener('click', () => {
+  clickCount++;
+  if (clickCount >= 3) {
+    changePage('page1', 'page2');
+  }
+});
+
+envelopeContainer.addEventListener('click', () => {
+  fire.style.display = 'block';
+  envelope.classList.add('burn-effect');
+  setTimeout(() => {
+    changePage('page2', 'page3');
+  }, 3000);
+});
+
+function changePage(from, to) {
+  document.getElementById(from).classList.remove('active');
+  document.getElementById(to).classList.add('active');
+}
+</script>
+</body>
+</html>
