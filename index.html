@@ -1,346 +1,460 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday</title>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RAJS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
 
-body {
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
-  color: white;
-}
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: #0a0a0a;
+            font-family: 'Brush Script MT', cursive, 'Georgia', serif;
+            position: fixed;
+            width: 100%;
+        }
 
-/* --- FOND AVEC ÉTOILES FILANTES --- */
-#stars, #shooting-stars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: radial-gradient(circle at 50% 50%, #000010, #000);
-  overflow: hidden;
-}
+        .heart-section {
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
 
-/* Petites étoiles scintillantes */
-.star {
-  position: absolute;
-  background: white;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle 3s infinite ease-in-out;
-}
+        .heart-section.fade-out {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
-}
+        .heart-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            cursor: pointer;
+            touch-action: manipulation;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
 
-/* Étoiles filantes */
-.shooting-star {
-  position: absolute;
-  width: 100px;
-  height: 2px;
-  background: linear-gradient(90deg, white, transparent);
-  opacity: 0.7;
-  transform: rotate(45deg);
-  animation: shoot 2s linear forwards;
-}
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
 
-@keyframes shoot {
-  0% {
-    transform: translate(0, 0) rotate(45deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(100vw, 100vh) rotate(45deg);
-    opacity: 0;
-  }
-}
+        .heart-container:active {
+            animation: none;
+            transform: scale(0.95);
+        }
 
-/* --- PAGES --- */
-.page {
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1s ease;
-}
+        .emoji-point {
+            position: absolute;
+            font-size: 14px;
+            opacity: 0;
+            animation: appear 0.5s ease-out forwards;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.8));
+        }
 
-.page.active {
-  opacity: 1;
-  pointer-events: all;
-}
+        @keyframes appear {
+            to {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
 
-/* --- PAGE 1 (cœur) --- */
-#page1 h1 {
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  text-shadow: 0 0 20px #ff77ff;
-  animation: pulse 2s ease-in-out infinite;
-}
+        .heart-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, transparent 70%);
+            animation: pulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
 
-.main-heart {
-  font-size: 5rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 0 20px #ff99cc);
-  user-select: none;
-}
-.main-heart:hover { transform: scale(1.2); }
+        .instruction {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff0000;
+            text-align: center;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8),
+                         0 0 20px rgba(255, 0, 0, 0.6);
+            z-index: 10;
+            pointer-events: none;
+        }
 
-.instruction {
-  position: absolute;
-  bottom: 30px;
-  color: rgba(255,255,255,0.9);
-  font-size: 1.2rem;
-  animation: bounce 2s ease-in-out infinite;
-}
+        .letter-section {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            overflow-y: auto;
+            padding: 15px;
+            background: #0a0a0a;
+        }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
+        .letter-section.show {
+            display: flex;
+            opacity: 1;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 60px;
+        }
 
-/* --- PAGE 2 (enveloppe réaliste + feu) --- */
-.envelope-container {
-  position: relative;
-  width: 320px;
-  height: 220px;
-  cursor: pointer;
-  perspective: 1000px;
-}
+        .letter-container {
+            max-width: 100%;
+            width: 100%;
+            background-image: 
+                linear-gradient(to bottom, 
+                    rgba(139, 90, 43, 0.9) 0%,
+                    rgba(194, 147, 89, 0.95) 10%,
+                    rgba(222, 184, 135, 0.98) 50%,
+                    rgba(194, 147, 89, 0.95) 90%,
+                    rgba(139, 90, 43, 0.9) 100%);
+            padding: 30px 20px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.8),
+                inset 0 0 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(101, 67, 33, 0.5);
+            position: relative;
+            animation: unfold 1.5s ease-out;
+            border-radius: 5px;
+        }
 
-.envelope {
-  width: 100%;
-  height: 100%;
-  background: #d2b48c;
-  border-radius: 4px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  position: relative;
-  overflow: hidden;
-}
+        @keyframes unfold {
+            0% {
+                transform: scale(0.5) rotateX(90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotateX(0deg);
+                opacity: 1;
+            }
+        }
 
-.envelope::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-  opacity: 0.3;
-}
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.02) 2px,
+                    rgba(0, 0, 0, 0.02) 3px
+                );
+            pointer-events: none;
+            border-radius: 5px;
+        }
 
-.envelope-flap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60%;
-  background: linear-gradient(to bottom, #c49b6c, #a0784f);
-  clip-path: polygon(0 0, 50% 100%, 100% 0);
-  transform-origin: top center;
-  transition: transform 1s ease;
-}
+        .letter-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(101, 67, 33, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            border-radius: 5px;
+        }
 
-/* Feu réaliste */
-.fire {
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  width: 80%;
-  height: 60px;
-  pointer-events: none;
-  display: none;
-}
+        .letter-header {
+            font-size: 1.5em;
+            font-weight: normal;
+            margin-bottom: 25px;
+            color: #2c1810;
+            font-style: italic;
+            text-align: center;
+        }
 
-.flame {
-  position: absolute;
-  bottom: 0;
-  width: 20px;
-  height: 60px;
-  background: radial-gradient(circle at 50% 80%, #ff0, #f00 70%);
-  border-radius: 50%;
-  animation: flameMove 0.4s infinite alternate;
-  opacity: 0.8;
-}
+        .letter-content {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #1a0f08;
+            text-align: justify;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
 
-.flame:nth-child(1) { left: 30px; animation-delay: 0s; }
-.flame:nth-child(2) { left: 80px; animation-delay: 0.1s; }
-.flame:nth-child(3) { left: 130px; animation-delay: 0.2s; }
-.flame:nth-child(4) { left: 180px; animation-delay: 0.3s; }
+        .letter-content p {
+            margin-bottom: 20px;
+            text-indent: 20px;
+        }
 
-@keyframes flameMove {
-  from { transform: scaleY(1) translateY(0); opacity: 0.9; }
-  to { transform: scaleY(1.4) translateY(-20px); opacity: 0.5; }
-}
+        .back-button {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(139, 90, 43, 0.9);
+            color: #f5e6d3;
+            border: 2px solid rgba(101, 67, 33, 0.7);
+            padding: 10px 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Georgia', serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            touch-action: manipulation;
+        }
 
-.burn-effect {
-  animation: burnOut 3s ease forwards;
-}
+        .back-button:active {
+            background: rgba(101, 67, 33, 0.9);
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
 
-@keyframes burnOut {
-  0% { filter: brightness(1) contrast(1); opacity: 1; }
-  80% { filter: brightness(1.5) sepia(1); opacity: 0.8; }
-  100% { opacity: 0; transform: scale(0.95); }
-}
+        /* Adaptation pour les très petits écrans */
+        @media (max-width: 360px) {
+            .heart-container {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .instruction {
+                font-size: 18px;
+            }
+            
+            .heart-glow {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .letter-container {
+                padding: 20px 15px;
+            }
+            
+            .letter-content {
+                font-size: 0.85em;
+                line-height: 1.5;
+            }
+            
+            .letter-header {
+                font-size: 1.3em;
+            }
+        }
 
-/* --- PAGE 3 (lettre) --- */
-#page3 {
-  background: transparent;
-}
-
-.letter {
-  background: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-  max-width: 600px;
-  width: 90%;
-  animation: unfold 1s ease-out;
-  color: #333;
-}
-
-@keyframes unfold {
-  0% { transform: scale(0.5) rotateX(-90deg); opacity: 0; }
-  100% { transform: scale(1) rotateX(0); opacity: 1; }
-}
-
-.letter h2 {
-  color: #e74c3c;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.letter p {
-  font-size: 1.2rem;
-  line-height: 1.8;
-  margin-bottom: 15px;
-  text-align: justify;
-}
-
-.signature {
-  text-align: right;
-  font-style: italic;
-  color: #e74c3c;
-  margin-top: 30px;
-  font-size: 1.3rem;
-}
-</style>
+        /* Adaptation pour les écrans plus grands */
+        @media (min-width: 768px) {
+            .heart-container {
+                width: 350px;
+                height: 350px;
+            }
+            
+            .instruction {
+                font-size: 24px;
+            }
+            
+            .heart-glow {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .emoji-point {
+                font-size: 16px;
+            }
+            
+            .letter-container {
+                max-width: 600px;
+                padding: 40px 30px;
+            }
+            
+            .letter-content {
+                font-size: 1.1em;
+                line-height: 1.8;
+            }
+            
+            .letter-header {
+                font-size: 1.8em;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<!-- FOND D'ÉTOILES -->
-<div id="stars"></div>
-<div id="shooting-stars"></div>
-
-<!-- PAGE 1 -->
-<div id="page1" class="page active">
-  <h1>HAPPY BIRTHDAY TO YOU</h1>
-  <div class="main-heart" id="mainHeart">❤️</div>
-  <div class="instruction">Cliquez sur le cœur ! 💝</div>
-</div>
-
-<!-- PAGE 2 -->
-<div id="page2" class="page">
-  <h1>Vous avez un message...</h1>
-  <div class="envelope-container" id="envelopeContainer">
-    <div class="envelope" id="envelope">
-      <div class="envelope-flap"></div>
-      <div class="fire" id="fire">
-        <div class="flame"></div>
-        <div class="flame"></div>
-        <div class="flame"></div>
-        <div class="flame"></div>
-      </div>
+    <div class="heart-section" id="heartSection">
+        <div class="heart-glow"></div>
+        <div class="heart-container" id="heartContainer">
+            <div class="instruction">Touche Moi !</div>
+        </div>
     </div>
-  </div>
-  <div class="instruction">Cliquez sur l'enveloppe ! 💌</div>
-</div>
 
-<!-- PAGE 3 -->
-<div id="page3" class="page">
-  <div class="letter">
-    <h2>Joyeux Anniversaire ! 🎉</h2>
-    <p>En ce jour spécial, je te souhaite un merveilleux anniversaire rempli de joie et de bonheur.</p>
-    <p>Tu es une personne unique, lumineuse et inspirante. Que cette année t’apporte tout ce que ton cœur désire !</p>
-    <p>Profite pleinement de cette journée, elle t’appartient ! 🎂🎈</p>
-    <div class="signature">Avec toute mon affection ❤️</div>
-  </div>
-</div>
+    <div class="letter-section" id="letterSection">
+        <button class="back-button" id="backButton">← Retour</button>
+        <div class="letter-container">
+            <div class="letter-header">Cher Jean,</div>
+            <div class="letter-content">
+                <p>En  cette  journée  spéciale ,je souhaiterai  te faire part  de  ces  quelques mots pour que tu saches à  quel  point tu  es  une  personne  merveilleux</p>
+                <p>22 ans  d'existences  , le jeune garçon que tu  étais auparavant est maintenant devenu  un  homme : fort ,courageux , chalereux , et pleine d'ambician .</p>
+                <p>Cela ne fait que 3  ans et  demi  que j'ai  appris à  te connaitre et à t'aimer  et je vois que  tu  as grandi, Sito  Sergio est à  présent Petit Jean ,  petit mais avec un  grand âme.</p>
+                <p>Le petit vilain  garçon que tu étais est  à  ce  jour un gentlmen , qui est prêt à  tout pour reusir !</p>                
+                <p> Pas à  pas ,tu  as montrer  que tu vaux mieux que les gens  pensaient de  toi .</p>
+                <p> Aujourd'hui  ,  je veux que tu realises et que tu saches que je suis sincerement fière de la personne que tu es à présents . Et je sais que tu deviendras encore plus fort et que tes projets se réalise</p> 
+                <p>Ta dulcinée sera toujours là pour toi , peut-être  pas presentielle , mais dans  ton coeur et ton esprit  .  Comme le disait un homme autre fois :  "Hanaraka anao toy ny aloko " , "Izay  ratranao de feriko ,takaitranao no aretiko ,  n'inona inona hanjo,izay lalanao no hizorako ,  antsana io na tevina tsy ampiova na ampihemmotra , fontsika mifangia" , "Ny halavirana sy ny taona , tsy hahasakana antsikia tsy hihaona"</p>
+                <p>Je n'ai pas eu  l'occasion de rencontrer des  grands parents , mais je sais une choses c'est qu'ils sont fières de  la personne que  tu es  maintenant . Pas toujours correcte ni parfait , mais n'arrete pas de  surprende les  gens.</p>
+                
+                <p>Joyeux anniversaire mon amour, que cette année t'apporte tout le bonheur que tu mérites.</p>
+            </div>
+        </div>
+    </div>
 
-<script>
-// --- Animation étoiles fixes ---
-const starsContainer = document.getElementById('stars');
-for (let i = 0; i < 150; i++) {
-  const star = document.createElement('div');
-  star.classList.add('star');
-  star.style.top = Math.random() * 100 + '%';
-  star.style.left = Math.random() * 100 + '%';
-  star.style.animationDelay = Math.random() * 3 + 's';
-  starsContainer.appendChild(star);
-}
+    <script>
+        const container = document.getElementById('heartContainer');
+        const heartSection = document.getElementById('heartSection');
+        const letterSection = document.getElementById('letterSection');
+        const backButton = document.getElementById('backButton');
+        const width = 280;
+        const height = 280;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        let animationInterval;
 
-// --- Étoiles filantes aléatoires ---
-const shootingContainer = document.getElementById('shooting-stars');
-function createShootingStar() {
-  const star = document.createElement('div');
-  star.classList.add('shooting-star');
-  star.style.top = Math.random() * window.innerHeight / 2 + 'px';
-  star.style.left = Math.random() * window.innerWidth / 2 + 'px';
-  shootingContainer.appendChild(star);
-  setTimeout(() => star.remove(), 2000);
-}
-setInterval(createShootingStar, 1500);
+        function createHeartPoints() {
+            const points = [];
+            const scale = 10;
+            const numPoints = 120;
 
-// --- Navigation entre pages ---
-let clickCount = 0;
-const mainHeart = document.getElementById('mainHeart');
-const envelopeContainer = document.getElementById('envelopeContainer');
-const envelope = document.getElementById('envelope');
-const fire = document.getElementById('fire');
+            for (let i = 0; i < numPoints; i++) {
+                const t = (i / numPoints) * Math.PI * 2;
+                const x = scale * (16 * Math.pow(Math.sin(t), 3));
+                const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                
+                points.push({
+                    x: centerX + x,
+                    y: centerY + y,
+                    delay: i * 15
+                });
+            }
+            return points;
+        }
 
-mainHeart.addEventListener('click', () => {
-  clickCount++;
-  if (clickCount >= 3) {
-    changePage('page1', 'page2');
-  }
-});
+        function drawHeart() {
+            const instruction = container.querySelector('.instruction');
+            container.innerHTML = '';
+            if (instruction) {
+                container.appendChild(instruction);
+            }
+            
+            const points = createHeartPoints();
+            
+            points.forEach((point, index) => {
+                setTimeout(() => {
+                    const emoji = document.createElement('div');
+                    emoji.className = 'emoji-point';
+                    emoji.textContent = '⚖️';
+                    emoji.style.left = point.x + 'px';
+                    emoji.style.top = point.y + 'px';
+                    emoji.style.animationDelay = '0s';
+                    container.appendChild(emoji);
+                }, point.delay);
+            });
+        }
 
-envelopeContainer.addEventListener('click', () => {
-  fire.style.display = 'block';
-  envelope.classList.add('burn-effect');
-  setTimeout(() => {
-    changePage('page2', 'page3');
-  }, 3000);
-});
+        function showLetter() {
+            heartSection.classList.add('fade-out');
+            setTimeout(() => {
+                heartSection.style.display = 'none';
+                letterSection.classList.add('show');
+                clearInterval(animationInterval);
+            }, 1000);
+        }
 
-function changePage(from, to) {
-  document.getElementById(from).classList.remove('active');
-  document.getElementById(to).classList.add('active');
-}
-</script>
+        function showHeart() {
+            letterSection.classList.remove('show');
+            setTimeout(() => {
+                letterSection.style.display = 'none';
+                heartSection.style.display = 'flex';
+                heartSection.classList.remove('fade-out');
+                drawHeart();
+                animationInterval = setInterval(() => {
+                    drawHeart();
+                }, 4000);
+            }, 500);
+        }
+
+        // Gestion des événements tactiles
+        container.addEventListener('click', showLetter);
+        container.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            showLetter();
+        }, {passive: false});
+        
+        backButton.addEventListener('click', showHeart);
+        backButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            showHeart();
+        }, {passive: false});
+
+        // Prévenir le zoom sur double-tap
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('gesturechange', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('gestureend', function(e) {
+            e.preventDefault();
+        });
+
+        // Initialisation
+        drawHeart();
+        animationInterval = setInterval(() => {
+            drawHeart();
+        }, 4000);
+    </script>
 </body>
 </html>
